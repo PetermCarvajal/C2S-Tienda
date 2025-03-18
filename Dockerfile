@@ -6,7 +6,7 @@ WORKDIR /app
 RUN ls -lh target/
 
 # Copiar el archivo JAR
-COPY target/*.jar app.jar
+COPY target/TiendaS-0.0.1-SNAPSHOT.jar app.jar
 
 # Exponer el puerto
 EXPOSE 8080
