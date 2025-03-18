@@ -1,0 +1,18 @@
+{
+  "deploy": {
+    "jar": "target/TiendaS-0.0.1-SNAPSHOT.jar",
+    "build": "mvn clean package"
+  },
+  "env": {
+    "PORT": "8080",
+    "MYSQL_ADDON_URI": "jdbc:mysql://your-db-url",
+    "MYSQL_ADDON_USER": "your-db-user",
+    "MYSQL_ADDON_PASSWORD": "your-db-password"
+  },
+  "build": {
+    "type": "maven"
+  },
+  "dependencies": {
+    "mysql": true
+  }
+}
