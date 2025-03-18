@@ -1,11 +1,15 @@
-# Usa una imagen de Java adecuada
 FROM eclipse-temurin:17-jdk AS build
 
-# Define el directorio de trabajo
 WORKDIR /app
 
-# Exponer el puerto de la app
+# Debug: Listar archivos en target antes de copiar
+RUN ls -lh target/
+
+# Copiar el archivo JAR
+COPY target/*.jar app.jar
+
+# Exponer el puerto
 EXPOSE 8080
 
-# Ejecutar la aplicación
+# Ejecutar la app
 CMD ["java", "-jar", "app.jar"]
