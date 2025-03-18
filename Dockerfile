@@ -1,14 +1,14 @@
-# Usar una imagen de Java
-FROM openjdk:17-jdk-slim
+# Usa una imagen de Java adecuada
+FROM eclipse-temurin:17-jdk AS build
 
-# Establecer el directorio de trabajo en el contenedor
+# Define el directorio de trabajo
 WORKDIR /app
 
-# Copiar el archivo JAR al contenedor
+# Copiar el .jar si existe
 COPY target/*.jar app.jar
 
-# Exponer el puerto en el que corre la app
+# Exponer el puerto de la app
 EXPOSE 8080
 
-# Comando para ejecutar la aplicación
-COPY --chown=root:root target/*.jar app.jar
+# Ejecutar la aplicación
+CMD ["java", "-jar", "app.jar"]
