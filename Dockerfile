@@ -1,15 +1,13 @@
-FROM eclipse-temurin:17-jdk AS build
-
+# Etapa 1: Construcción de la aplicación
+FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY . .
+RUN ./mvnw clean package -DskipTests
 
-# Debug: Listar archivos en target antes de copiar
-RUN ls -lh target/
+# Etapa 2: Ejecución de la aplicación
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY --from=build /app/target/TiendaS-0.0.1-SNAPSHOT.jar app.jar
 
-# Copiar el archivo JAR
-COPY target/TiendaS-0.0.1-SNAPSHOT.jar app.jar
-
-# Exponer el puerto
 EXPOSE 8080
-
-# Ejecutar la app
 CMD ["java", "-jar", "app.jar"]
