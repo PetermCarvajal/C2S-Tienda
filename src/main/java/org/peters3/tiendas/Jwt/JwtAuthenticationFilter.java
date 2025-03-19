@@ -1,7 +1,6 @@
 package org.peters3.tiendas.Jwt;
 
 import java.io.IOException;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String token = getTokenFromRequest(request);
         final String username;
+
+            System.out.println("Token recibido: " + token);
+
 
         if (token==null)
         {

@@ -11,7 +11,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY="PmAi8x1QD5ewfwFrnx9IBaTw9MhZbTibJ0Hr1auTYXc=";
+    private static final String SECRET_KEY="PmAi8x1QD5e159SGHKPOIUYTR327O,Ñ{+´''KJGHDAQ21|853-wfwFrnx9IBaTw9MhZbTibJ0Hr1auTYXc=";
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
