@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+    private static final String SECRET_KEY="6vub3jRO5xEevyCFckW1ZMRZhaWma8EPCmMxsZHt1KA=";
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
     }
