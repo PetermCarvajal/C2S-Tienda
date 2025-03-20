@@ -1,5 +1,6 @@
 package org.peters3.tiendas.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,4 +17,8 @@ public class Controller {
     {
         return "Código 404";
     }
+    @GetMapping(value = "login")
+    public String testLogin() {
+    return "Get Usado";
+}
 }
