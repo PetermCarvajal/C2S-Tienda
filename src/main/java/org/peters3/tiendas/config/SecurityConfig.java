@@ -1,5 +1,6 @@
 package org.peters3.tiendas.config;
 
+import jakarta.servlet.FilterChain;
 import org.peters3.tiendas.Jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
