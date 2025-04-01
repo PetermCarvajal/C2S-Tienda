@@ -1,11 +1,14 @@
 package org.peters3.tiendas.Authentication;
 
 import org.peters3.tiendas.entity.Role;
+import org.peters3.tiendas.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.peters3.tiendas.entity.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -50,5 +53,9 @@ public class AuthController {
             userRepository.delete(usuario);
             return ResponseEntity.ok("Usuario eliminado con éxito");
         }).orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 }

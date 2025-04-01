@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User Management System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover {
+            background: #0056b3;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: grid;
+            gap: 5px;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .primary-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .danger-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .message {
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-links">
+        <button class="nav-link" onclick="showSection('register')">Registrar</button>
+        <button class="nav-link" onclick="loadUsers()">Ver Usuarios</button>
+    </div>
+
+    <!-- Sección de Registro -->
+    <div id="register" class="form-section">
+        <h2>Registrar Nuevo Usuario</h2>
+        <div class="form-group">
+            <input type="text" id="regUsername" placeholder="Username*" required>
+        </div>
+        <div class="form-group">
+            <input type="password" id="regPassword" placeholder="Password*" required>
+        </div>
+        <div class="form-group">
+            <input type="text" id="regNombre" placeholder="Nombre">
+        </div>
+        <div class="form-group">
+            <input type="text" id="regApellido" placeholder="Apellido">
+        </div>
+        <div class="form-group">
+            <input type="email" id="regEmail" placeholder="Email">
+        </div>
+        <div class="form-group">
+            <select id="regRole">
+                <option value="USER">Usuario</option>
+                <option value="ADMIN">Administrador</option>
+                <option value="ACCIONISTA">Accionista</option>
+            </select>
+        </div>
+        <button class="primary-btn" onclick="registerUser()">Registrar</button>
+        <div id="regMessage" class="message"></div>
+    </div>
+
+    <!-- Sección de Edición -->
+    <div id="edit" class="form-section">
+        <h2>Editar Usuario</h2>
+        <div class="form-group">
+            <input type="text" id="editUsername" readonly>
+        </div>
+        <div class="form-group">
+            <input type="password" id="editPassword" placeholder="Nueva contraseña">
+        </div>
+        <div class="form-group">
+            <input type="text" id="editNombre" placeholder="Nombre">
+        </div>
+        <div class="form-group">
+            <input type="text" id="editApellido" placeholder="Apellido">
+        </div>
+        <div class="form-group">
+            <input type="email" id="editEmail" placeholder="Email">
+        </div>
+        <div class="form-group">
+            <select id="editRole">
+                <option value="USER">Usuario</option>
+                <option value="ADMIN">Administrador</option>
+                <option value="ACCIONISTA">Accionista</option>
+            </select>
+        </div>
+        <div class="action-btns">
+            <button class="primary-btn" onclick="updateUser()">Guardar</button>
+            <button class="secondary-btn" onclick="showSection('usersTable')">Cancelar</button>
+        </div>
+        <div id="editMessage" class="message"></div>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    <div id="usersTable" class="form-section">
+        <h2>Usuarios Registrados</h2>
+        <div class="loader" id="tableLoader"></div>
+        <table id="usersList">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="usersMessage" class="message"></div>
+    </div>
+
+    <script>
+        let currentToken = null;
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showMessage(elementId, type, text) {
+            const messageDiv = document.getElementById(elementId);
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messageDiv.style.display = 'block';
+            setTimeout(() => messageDiv.style.display = 'none', 3000);
+        }
+
+        async function loadUsers() {
+            try {
+                document.getElementById('tableLoader').style.display = 'block';
+                const response = await fetch('/auth/users');
+
+                if (!response.ok) throw new Error('Error al cargar usuarios');
+
+                const users = await response.json();
+                renderUsers(users);
+                showSection('usersTable');
+            } catch (error) {
+                showMessage('usersMessage', 'error', error.message);
+            } finally {
+                document.getElementById('tableLoader').style.display = 'none';
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.querySelector('#usersList tbody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.nombre || ''}</td>
+                    <td>${user.apellido || ''}</td>
+                    <td>${user.email || ''}</td>
+                    <td>${user.role}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="primary-btn" onclick="loadUserForEdit('${user.username}')">Editar</button>
+                            <button class="danger-btn" onclick="deleteUser('${user.username}')">Eliminar</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function loadUserForEdit(username) {
+            try {
+                const response = await fetch(`/auth/${username}`);
+                if (!response.ok) throw new Error('Usuario no encontrado');
+
+                const user = await response.json();
+
+                document.getElementById('editUsername').value = user.username;
+                document.getElementById('editNombre').value = user.nombre || '';
+                document.getElementById('editApellido').value = user.apellido || '';
+                document.getElementById('editEmail').value = user.email || '';
+                document.getElementById('editRole').value = user.role;
+                document.getElementById('editPassword').value = '';
+
+                showSection('edit');
+            } catch (error) {
+                showMessage('editMessage', 'error', error.message);
+            }
+        }
+
+        async function registerUser() {
+            try {
+                const userData = {
+                    username: document.getElementById('regUsername').value,
+                    password: document.getElementById('regPassword').value,
+                    nombre: document.getElementById('regNombre').value,
+                    apellido: document.getElementById('regApellido').value,
+                    email: document.getElementById('regEmail').value,
+                    role: document.getElementById('regRole').value
+                };
+
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(userData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('regMessage', 'success', 'Usuario registrado con éxito');
+                    loadUsers();
+                } else {
+                    throw new Error(result.message || 'Error en el registro');
+                }
+            } catch (error) {
+                showMessage('regMessage', 'error', error.message);
+            }
+        }
+
+        async function updateUser() {
+            try {
+                const username = document.getElementById('editUsername').value;
+                const userData = {
+                    username: username,
+                    password: document.getElementById('editPassword').value,
+                    nombre: document.getElementById('editNombre').value,
+                    apellido: document.getElementById('editApellido').value,
+                    email: document.getElementById('editEmail').value,
+                    role: document.getElementById('editRole').value
+                };
+
+                const response = await fetch(`/auth/${username}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    showMessage('editMessage', 'success', 'Usuario actualizado');
+                    loadUsers();
+                    showSection('usersTable');
+                } else {
+                    throw new Error('Error al actualizar');
+                }
+            } catch (error) {
+                showMessage('editMessage', 'error', error.message);
+            }
+        }
+
+        async function deleteUser(username) {
+            if (!confirm(`¿Estás seguro de eliminar a ${username}?`)) return;
+
+            try {
+                const response = await fetch(`/auth/${username}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    showMessage('usersMessage', 'success', 'Usuario eliminado');
+                    loadUsers();
+                } else {
+                    throw new Error('Error al eliminar');
+                }
+            } catch (error) {
+                showMessage('usersMessage', 'error', error.message);
+            }
+        }
+
+        async function loginForToken() {
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: 'admin',
+                    password: 'admin123'
+                })
+            });
+
+            const data = await response.json();
+            currentToken = data.token;
+        }
+
+        loginForToken();
+        <
+    </script>
+</body>
+</html>
